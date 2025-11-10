@@ -1,0 +1,11 @@
+import math
+x=[0,1,2,3,4]; y=[0,0,0,1,1]
+w=b=0; lr=0.1
+for _ in range(1000):
+    for i in range(len(x)):
+        z=w*x[i]+b
+        y_pred=1/(1+math.exp(-z))
+        w+=lr*(y[i]-y_pred)*x[i]
+        b+=lr*(y[i]-y_pred)
+correct=sum((y[i]==round(1/(1+math.exp(-(w*x[i]+b))))) for i in range(len(x)))
+print("Accuracy:",correct/len(x))
