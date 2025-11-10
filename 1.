@@ -1,0 +1,9 @@
+from sklearn.metrics import confusion_matrix
+import numpy as np
+y_true_bin = [0, 1, 0, 1, 1, 0]
+y_pred_bin = [0, 1, 0, 0, 1, 1]
+print("Bi-level Confusion Matrix:\n", confusion_matrix(y_true_bin, y_pred_bin))
+# ----- Multi-level (3 classes) -----
+y_true_multi = [0, 1, 2, 1, 0, 2, 1, 2]
+y_pred_multi = [0, 2, 1, 1, 0, 2, 0, 2]
+print("\nMulti-level Confusion Matrix:\n", confusion_matrix(y_true_multi, y_pred_multi))
