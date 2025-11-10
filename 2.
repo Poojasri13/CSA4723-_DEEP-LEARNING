@@ -1,0 +1,7 @@
+x_train=[1,2,3,4,5]; y_train=[1,4,9,16,25]  # perfect square relation
+x_test=[6,7]; y_test=[36,49]
+def overfit_model(x): return [y_train[i-1] for i in x if i<=5]  # memorizes training data
+y_pred_train=overfit_model(x_train)
+y_pred_test=[0,0]
+print("Train Error:",sum((y_train[i]-y_pred_train[i])**2 for i in range(5)))
+print("Test Error :",sum((y_test[i]-y_pred_test[i])**2 for i in range(2)))
