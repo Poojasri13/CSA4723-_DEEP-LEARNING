@@ -1,7 +1,31 @@
-x=[1,2,3,4,5]; y=[2,4,5,4,5]
-n=len(x)
-m=(n*sum(x[i]*y[i] for i in range(n))-sum(x)*sum(y))/float(n*sum(i*i for i in x)-sum(x)**2)
-b=(sum(y)-m*sum(x))/n
-y_pred=[m*i+b for i in x]
-r2=1-sum((y[i]-y_pred[i])**2 for i in range(n))/sum((y[i]-sum(y)/n)**2 for i in range(n))
-print("m=%.2f b=%.2f R²=%.2f"%(m,b,r2))
+# --- Import necessary libraries ---
+from sklearn.datasets import load_diabetes
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+# --- Load a numerical dataset ---
+data = load_diabetes()
+X = data.data
+y = data.target
+# --- Split dataset into training and testing sets ---
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+# --- Create and train the Linear Regression model ---
+model = LinearRegression()
+model.fit(X_train, y_train)
+# --- Make predictions ---
+y_pred = model.predict(X_test)
+# --- Evaluate the model performance ---
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+# --- Display the results ---
+print("Mean Squared Error (MSE):", mse)
+print("R² Score:", r2)
+print("Intercept:", model.intercept_)
+print("Coefficients:", model.coef_)
+# --- Plot actual vs predicted values ---
+plt.scatter(y_test, y_pred, color='blue')
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Linear Regression Performance (Actual vs Predicted)")
+plt.show()
