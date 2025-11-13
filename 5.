@@ -1,10 +1,10 @@
-x=[1,2,3,4,5]; y=[2,4,6,8,10]
-m=b=0; lr=0.01
-for _ in range(1000):
-    dm=db=0
-    for i in range(len(x)):
-        yp=m*x[i]+b
-        dm+=-2*x[i]*(y[i]-yp)
-        db+=-2*(y[i]-yp)
-    m-=lr*dm/len(x); b-=lr*db/len(x)
-print("m=%.2f b=%.2f"%(m,b))
+ import numpy as np
+# Step 1: Define function and its derivative
+f = lambda x: x**2 + 4*x + 4        # (x+2)^2
+df = lambda x: 2*x + 4
+# Step 2: Initialize
+x, lr = 10, 0.1                     # start and learning rate
+# Step 3: Gradient Descent loop
+for i in range(20):
+    x = x - lr * df(x)
+    print(f"Iteration {i+1}: x = {x:.4f}, f(x) = {f(x):.4f}")
