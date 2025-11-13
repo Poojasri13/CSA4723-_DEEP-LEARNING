@@ -1,9 +1,23 @@
-from sklearn.metrics import confusion_matrix
-import numpy as np
-y_true_bin = [0, 1, 0, 1, 1, 0]
-y_pred_bin = [0, 1, 0, 0, 1, 1]
-print("Bi-level Confusion Matrix:\n", confusion_matrix(y_true_bin, y_pred_bin))
-# ----- Multi-level (3 classes) -----
-y_true_multi = [0, 1, 2, 1, 0, 2, 1, 2]
-y_pred_multi = [0, 2, 1, 1, 0, 2, 0, 2]
-print("\nMulti-level Confusion Matrix:\n", confusion_matrix(y_true_multi, y_pred_multi))
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
+import matplotlib.pyplot as plt
+# True labels and predicted labels
+y_true = [1, 0, 1, 1, 0, 1, 0, 0, 1, 0]   # Actual
+y_pred = [1, 0, 1, 0, 0, 1, 0, 1, 1, 0]   # Predicted
+# Construct confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Not Infected", "Infected"])
+disp.plot(cmap="Blues")
+plt.title("Bi-Level (Binary) Confusion Matrix")
+plt.show()
+# Calculate performance metrics
+accuracy = accuracy_score(y_true, y_pred)
+precision = precision_score(y_true, y_pred)
+recall = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+print("Accuracy :", round(accuracy, 2))
+print("Precision:", round(precision, 2))
+print("Recall   :", round(recall, 2))
+print("F1-Score :", round(f1, 2))
+
+
+
