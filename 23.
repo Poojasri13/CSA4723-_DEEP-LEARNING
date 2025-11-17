@@ -1,0 +1,32 @@
+import numpy as np
+from sklearn.datasets import make_circles
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+X, y = make_circles(n_samples=1200, noise=0.1, factor=0.4, random_state=0)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+model = Sequential()
+model.add(Dense(16, activation='relu', input_dim=2))
+model.add(Dense(12, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+history = model.fit(X_train, y_train, epochs=40, batch_size=16, validation_split=0.2, verbose=1)
+
+y_pred_prob = model.predict(X_test)
+y_pred = (y_pred_prob > 0.5).astype("int32")
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
