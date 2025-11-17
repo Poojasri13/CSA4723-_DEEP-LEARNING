@@ -1,0 +1,40 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+# Simple spiral data generator
+def generate_spiral(n):
+    t = np.linspace(0, 4*np.pi, n)
+    x1 = t * np.cos(t)
+    y1 = t * np.sin(t)
+    x2 = -t * np.cos(t)
+    y2 = -t * np.sin(t)
+    X = np.vstack([np.column_stack([x1, y1]),
+                   np.column_stack([x2, y2])])
+    y = np.hstack([np.zeros(n), np.ones(n)])
+    return X, y
+# Generate dataset
+X, y = generate_spiral(500)
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# Scale
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+# Build simple ANN
+model = Sequential([
+    Dense(16, activation='relu', input_shape=(2,)),
+    Dense(1, activation='sigmoid')
+])
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+# Train
+model.fit(X_train, y_train, epochs=30, batch_size=16, verbose=0)
+# Predict
+y_pred_prob = model.predict(X_test)
+y_pred = (y_pred_prob > 0.5).astype("int32")
+# Results
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
