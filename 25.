@@ -1,0 +1,52 @@
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+data = load_iris()
+X = data.data
+y = data.target
+# Train–Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+# Standardize Features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+# One-hot encode labels
+y_train_cat = to_categorical(y_train, num_classes=3)
+structures = [
+    [8],            # one hidden layer (8 neurons)
+    [16],           # one hidden layer (16 neurons)
+    [16, 8],        # two hidden layers
+    [32, 16, 8]     # three hidden layers
+]
+activations = ["relu", "tanh", "sigmoid"]
+results = {}for struct in structures:
+    for act in activations:
+        model = Sequential()
+        # Input + Hidden Layers
+        for i, neurons in enumerate(struct):
+            if i == 0:
+                model.add(Dense(neurons, activation=act, input_shape=(X_train.shape[1],)))
+            else:
+                model.add(Dense(neurons, activation=act))
+        # Output layer (3 classes)
+        model.add(Dense(3, activation="softmax"))
+        # Compile Model
+        model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+        # Train Model
+        model.fit(X_train, y_train_cat, epochs=20, batch_size=8, verbose=0)
+        # Predict
+        y_pred = model.predict(X_test)
+        y_pred = np.argmax(y_pred, axis=1)
+        # Accuracy
+        acc = accuracy_score(y_test, y_pred)
+        results[str(struct) + "_" + act] = acc
+for config, acc in results.items():
+    print(config, ":", acc)
+
